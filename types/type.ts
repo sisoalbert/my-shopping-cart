@@ -6,3 +6,9 @@ export type Product = {
   imageSrc: string;
   imageAlt: string;
 };
+
+export type CartProduct = Product & {
+  quantity: number;
+};
+
+export type CartData = CartProduct[];
