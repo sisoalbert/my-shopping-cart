@@ -1,38 +1,30 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import OpenCart from "@/components/cart/open-cart";
 import { ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
-// import { formatCurrencyString, useShoppingCart } from "use-shopping-cart";
+import CartItems from "./cartItems";
+import { CartData } from "@/types/type";
+import { useSearchParams } from "next/navigation";
+import { useCartModal } from "@/data/hooks/useCartModal";
 // import CartItem from "@/components/cart/cart-item";
 // import CheckoutButton from "@/components/cart/checkout";
 
-export default function CartModal() {
-  const [openCart, setOpenCart] = useState(false);
-  //   const { cartCount, cartDetails, totalPrice, redirectToCheckout } =
-  //     useShoppingCart();
+export default function CartModal({ cartData }: { cartData: CartData }) {
+  const { showCartModal, toggleCartModal, deleteSearchParam } = useCartModal();
 
-  const renderCartMessages = (text: string) => {
-    return (
-      <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
-        <ShoppingCartIcon className="h-16" />
-        <p className="mt-6 text-center text-2xl font-bold">{text}</p>
-      </div>
-    );
+  const onClose = () => {
+    deleteSearchParam();
   };
 
   return (
     <>
-      <button aria-label="Open cart" onClick={() => setOpenCart(true)}>
+      <button aria-label="Open cart" onClick={toggleCartModal}>
         <OpenCart />
       </button>
-      <Transition.Root show={openCart} as={Fragment}>
-        <Dialog
-          as="div"
-          className="relative z-10"
-          onClose={() => setOpenCart(false)}
-        >
+      <Transition.Root show={showCartModal} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={onClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"
@@ -68,7 +60,7 @@ export default function CartModal() {
                             <button
                               type="button"
                               className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                              onClick={() => setOpenCart(false)}
+                              onClick={onClose}
                             >
                               <span className="absolute -inset-0.5" />
                               <span className="sr-only">Close panel</span>
@@ -86,18 +78,7 @@ export default function CartModal() {
                               role="list"
                               className="grid grid-cols-1 divide-y divide-gray-200"
                             >
-                              {/* {cartCount && cartCount > 0
-                                ? Object.values(cartDetails ?? {}).map(
-                                    (item) => (
-                                      <CartItem key={item.id} item={item} />
-                                    )
-                                  )
-                                : renderCartMessages("Your cart is empty ")} */}
-                              {/*{status === 'missing-items' && renderCartMessages('Your cart is empty.\n Add items to proceed to checkout.')}*/}
-
-                              {/*{status === 'redirect-error' && renderCartMessages('Unable to redirect to Stripe checkout page.')}*/}
-
-                              <p>Empty list</p>
+                              <CartItems cartData={cartData} />
                             </ul>
                           </div>
                         </div>
@@ -125,7 +106,7 @@ export default function CartModal() {
                             <button
                               type="button"
                               className="font-medium text-sky-900 hover:text-sky-700 px-2"
-                              onClick={() => setOpenCart(false)}
+                              onClick={onClose}
                             >
                               Continue Shopping
                               <span aria-hidden="true"> &rarr;</span>
