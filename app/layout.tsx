@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import React, { Suspense } from "react";
-// import OpenCart from "@/components/cart/open-cart";
 import Cart from "@/components/cart";
 import OpenCart from "@/components/cart/open-cart";
 
@@ -27,7 +26,7 @@ export default function RootLayout({
               <span>Next App Cart!</span>
             </div>
             <div className="flex justify-end md:w-1/2">
-              <Suspense fallback={<OpenCart />}>
+              <Suspense fallback={<OpenCart totalQuantity={0} />}>
                 <Cart />
               </Suspense>
             </div>

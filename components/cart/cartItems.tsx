@@ -54,13 +54,13 @@ export default function CartItems({ cartData }: { cartData: CartData }) {
                 />
               </button>
             </div>
-          ))}{" "}
+          ))}
         </>
       ) : (
         renderCartMessages(
           "Your cart is empty.\n Add items to proceed to checkout."
         )
-      )}{" "}
+      )}
       {/* {status === "redirect-error" &&
         renderCartMessages("Unable to redirect to Stripe checkout page.")} */}
     </div>

@@ -1,6 +1,6 @@
 "use server";
 
-import { Product } from "@/types/type";
+import { CartProduct, Product } from "@/types/type";
 import { cookies } from "next/headers";
 
 const SITE_NAME = "NextAppCart!";
@@ -56,4 +56,38 @@ export const removeFromCart = (productId: string) => {
     path: "/",
     expires: expirationDate,
   });
+};
+
+export const getCartData = async () => {
+  const cartData = cookies().get(CART_COOKIE_NAME)
+    ? JSON.parse(cookies().get(CART_COOKIE_NAME)?.value || "[]")
+    : [];
+  return cartData;
+};
+
+export const calculateTotalAmount = async () => {
+  const existingCart = cookies().get(CART_COOKIE_NAME)
+    ? JSON.parse(cookies().get(CART_COOKIE_NAME)?.value || "[]")
+    : [];
+
+  // Calculate total amount by iterating through the items in the cart
+  const totalAmount = existingCart.reduce(
+    (acc: number, product: CartProduct) => {
+      const productQuantity = product.quantity || 0;
+      const productPrice = product.price || 0;
+
+      return acc + productQuantity * productPrice;
+    },
+    0
+  );
+
+  const totalQuantity = existingCart.reduce(
+    (acc: number, product: CartProduct) => {
+      const productQuantity = product.quantity || 0;
+      return acc + productQuantity;
+    },
+    0
+  );
+
+  return { totalAmount, totalQuantity };
 };

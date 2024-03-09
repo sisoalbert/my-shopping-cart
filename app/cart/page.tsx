@@ -1,15 +1,10 @@
 import RemoveFromCart from "@/components/cart/removeFromCart";
-import { CartProduct, Product } from "@/types/type";
-import { cookies } from "next/headers";
+import { getCartData } from "@/lib/actions";
+import { CartProduct } from "@/types/type";
 import Image from "next/image";
 
-export default function ShoppingCart() {
-  const SITE_NAME = "NextAppCart!";
-  const CART_COOKIE_NAME = `${SITE_NAME}_cart`;
-
-  const cartData = cookies().get(CART_COOKIE_NAME)
-    ? JSON.parse(cookies().get(CART_COOKIE_NAME)?.value || "[]")
-    : [];
+export default async function ShoppingCart() {
+  const cartData = await getCartData();
 
   return (
     <div className="max-w-7xl mx-auto py-12">

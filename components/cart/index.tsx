@@ -1,13 +1,14 @@
 import CartModal from "@/components/cart/modal";
-import { cookies } from "next/headers";
+import { calculateTotalAmount, getCartData } from "@/lib/actions";
 
 export default async function Cart() {
-  const SITE_NAME = "NextAppCart!";
-  const CART_COOKIE_NAME = `${SITE_NAME}_cart`;
-
-  const cartData = cookies().get(CART_COOKIE_NAME)
-    ? JSON.parse(cookies().get(CART_COOKIE_NAME)?.value || "[]")
-    : [];
-
-  return <CartModal cartData={cartData} />;
+  const cartData = await getCartData();
+  const { totalQuantity, totalAmount } = await calculateTotalAmount();
+  return (
+    <CartModal
+      cartData={cartData}
+      totalAmount={totalAmount}
+      totalQuantity={totalQuantity}
+    />
+  );
 }

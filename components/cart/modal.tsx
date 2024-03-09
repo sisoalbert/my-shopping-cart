@@ -1,30 +1,34 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import OpenCart from "@/components/cart/open-cart";
-import { ShoppingCartIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import CartItems from "./cartItems";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import CartItems, { formatCurrencyString } from "./cartItems";
 import { CartData } from "@/types/type";
-import { useSearchParams } from "next/navigation";
 import { useCartModal } from "@/data/hooks/useCartModal";
+import CheckoutButton from "../checkout/checkout-button";
 // import CartItem from "@/components/cart/cart-item";
 // import CheckoutButton from "@/components/cart/checkout";
 
-export default function CartModal({ cartData }: { cartData: CartData }) {
+export default function CartModal({
+  cartData,
+  totalAmount,
+  totalQuantity,
+}: {
+  cartData: CartData;
+  totalAmount: number;
+  totalQuantity: number;
+}) {
   const { showCartModal, toggleCartModal, deleteSearchParam } = useCartModal();
-
-  const onClose = () => {
-    deleteSearchParam();
-  };
 
   return (
     <>
       <button aria-label="Open cart" onClick={toggleCartModal}>
-        <OpenCart />
+        <OpenCart totalQuantity={totalQuantity} />
       </button>
       <Transition.Root show={showCartModal} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={onClose}>
+        <Dialog as="div" className="relative z-10" onClose={deleteSearchParam}>
           <Transition.Child
             as={Fragment}
             enter="ease-in-out duration-500"
@@ -60,7 +64,7 @@ export default function CartModal({ cartData }: { cartData: CartData }) {
                             <button
                               type="button"
                               className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                              onClick={onClose}
+                              onClick={deleteSearchParam}
                             >
                               <span className="absolute -inset-0.5" />
                               <span className="sr-only">Close panel</span>
@@ -88,11 +92,10 @@ export default function CartModal({ cartData }: { cartData: CartData }) {
                         <div className="flex justify-between text-base font-medium text-gray-900">
                           <p>Subtotal</p>
                           <p>
-                            {/* {formatCurrencyString({
-                              value: totalPrice || 0,
+                            {formatCurrencyString({
+                              value: totalAmount || 0,
                               currency: "USD",
-                            })} */}
-                            $0.00
+                            })}
                           </p>
                         </div>
                         <p className="mt-0.5 text-sm text-gray-500">
@@ -100,13 +103,13 @@ export default function CartModal({ cartData }: { cartData: CartData }) {
                         </p>
 
                         <div className="mt-6 flex justify-center text-center items-center text-sm text-gray-500">
-                          {/* <CheckoutButton /> */}
-                          <p>
+                          <CheckoutButton />
+                          <p className="ml-4">
                             or
                             <button
                               type="button"
                               className="font-medium text-sky-900 hover:text-sky-700 px-2"
-                              onClick={onClose}
+                              onClick={deleteSearchParam}
                             >
                               Continue Shopping
                               <span aria-hidden="true"> &rarr;</span>

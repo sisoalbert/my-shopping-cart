@@ -8,7 +8,6 @@ export const useCartModal = () => {
   useEffect(() => {
     const showCart = searchParams.get("showCart") === "true";
     setShowCartModal(showCart);
-    // deleteSearchParam();
   }, [searchParams]);
 
   const toggleCartModal = () => {
@@ -18,8 +17,6 @@ export const useCartModal = () => {
     window.history.pushState({}, "", url);
   };
   const deleteSearchParam = () => {
-    // setShowCartModal((prevState) => !prevState);
-
     // Remove the showCart parameter from the URL
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete("showCart");
